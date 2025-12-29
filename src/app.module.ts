@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { CoreModule } from './core/core.module';
+import { OrderModule } from './order/order.module';
 
 // 装饰器可以理解为一个封装好的函数，  其实就是一个语法糖
 @Module({
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
+  exports: [],
+  imports: [CoreModule, OrderModule],
 
   // providers（提供者）：理解为"工具箱"，里面放着各种业务逻辑处理类（服务类）
   //   - 比如数据库操作、文件处理、邮件发送等具体功能
