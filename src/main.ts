@@ -9,10 +9,9 @@ async function bootstrap() {
     .setDescription('API接口文档') // 设置API文档的描述信息
     .setVersion('1.0') // 设置API的版本号
     .addBearerAuth() // 添加Bearer Token认证方式，用于API安全验证
-    .addTag('cats') // 添加标签，用于API分类
     .build() // 构建Swagger配置对象
   const documentFactory = () => SwaggerModule.createDocument(app, config) // 创建Swagger文档
-  SwaggerModule.setup('api-docs', app, documentFactory) // 设置Swagger，访问路径为 /api-docs
+  SwaggerModule.setup('swagger', app, documentFactory) // 设置Swagger，访问路径为 /api-docs
 
   app.setGlobalPrefix('api') // 设置全局路由前缀
   await app.listen(process.env.PORT ?? 3000) // 监听端口

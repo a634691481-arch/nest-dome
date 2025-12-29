@@ -1,30 +1,24 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
+// import { ConfigModule } from '@nestjs/config'
+// import { TypeOrmModule } from '@nestjs/typeorm'
 import { CoreModule } from './core/core.module'
-import { UploadModule } from './upload/upload.module'
 
 // 装饰器可以理解为一个封装好的函数，  其实就是一个语法糖
 @Module({
   controllers: [],
   providers: [],
-  exports: [CoreModule, UploadModule],
+  exports: [CoreModule],
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true
-    }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '3306'),
-      username: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_DATABASE || 'imagelibrary',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
-    }),
-    CoreModule,
-    UploadModule
+    // ConfigModule.forRoot({
+    //   isGlobal: true
+    // }),
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: ':memory:',
+    //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    //   synchronize: true
+    // }),
+    CoreModule
   ]
 
   // providers（提供者）：理解为"工具箱"，里面放着各种业务逻辑处理类（服务类）
