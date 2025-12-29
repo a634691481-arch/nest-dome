@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CoreService } from './core.service';
-import { CreateCoreDto } from './dto/create-core.dto';
-import { UpdateCoreDto } from './dto/update-core.dto';
+import { Controller, Get, Post, Body } from '@nestjs/common'
+import { CoreService } from './core.service'
+import { CreateCoreDto } from './dto/create-core.dto'
+// import { UpdateCoreDto } from './dto/update-core.dto'
 
 @Controller('core')
 export class CoreController {
@@ -9,26 +9,46 @@ export class CoreController {
 
   @Post()
   create(@Body() createCoreDto: CreateCoreDto) {
-    return this.coreService.create(createCoreDto);
+    return this.coreService.create(createCoreDto)
+  }
+  @Get('8888')
+  55555() {
+    return {
+      message: 'This action returns all core',
+      data: [
+        {
+          id: 1,
+          name: 'Core 1',
+          description: 'This is core 1'
+        },
+        {
+          id: 2,
+          name: 'Core 2',
+          description: 'This is core 2'
+        }
+      ],
+      statusCode: 200
+    }
   }
 
   @Get()
   findAll() {
-    return this.coreService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coreService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoreDto: UpdateCoreDto) {
-    return this.coreService.update(+id, updateCoreDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coreService.remove(+id);
+    return {
+      message: 'This action returns all core',
+      // query: query,
+      data: [
+        {
+          id: 1,
+          name: 'Core 1',
+          description: 'This is core 1'
+        },
+        {
+          id: 2,
+          name: 'Core 2',
+          description: 'This is core 2'
+        }
+      ],
+      statusCode: 200
+    }
   }
 }

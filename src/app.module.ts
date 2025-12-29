@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { CoreModule } from './core/core.module'
 import { UploadModule } from './upload/upload.module'
 
@@ -6,8 +8,24 @@ import { UploadModule } from './upload/upload.module'
 @Module({
   controllers: [],
   providers: [],
-  exports: [],
-  imports: [CoreModule, UploadModule]
+  exports: [CoreModule, UploadModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '3306'),
+      username: process.env.DB_USERNAME || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_DATABASE || 'imagelibrary',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true
+    }),
+    CoreModule,
+    UploadModule
+  ]
 
   // providers（提供者）：理解为"工具箱"，里面放着各种业务逻辑处理类（服务类）
   //   - 比如数据库操作、文件处理、邮件发送等具体功能
