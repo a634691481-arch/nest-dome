@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common'
 // import { ConfigModule } from '@nestjs/config'
 // import { TypeOrmModule } from '@nestjs/typeorm'
-import { CoreModule } from './core/core.module'
+import { UserModule } from './modules/user/user.module'
+import { OrderModule } from './modules/order/order.module'
 
 // 装饰器可以理解为一个封装好的函数，  其实就是一个语法糖
 @Module({
   controllers: [],
   providers: [],
-  exports: [CoreModule],
   imports: [
     // ConfigModule.forRoot({
     //   isGlobal: true
@@ -18,8 +18,10 @@ import { CoreModule } from './core/core.module'
     //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
     //   synchronize: true
     // }),
-    CoreModule
-  ]
+    UserModule,
+    OrderModule
+  ],
+  exports: []
 
   // providers（提供者）：理解为"工具箱"，里面放着各种业务逻辑处理类（服务类）
   //   - 比如数据库操作、文件处理、邮件发送等具体功能
@@ -50,8 +52,15 @@ import { CoreModule } from './core/core.module'
   // 对应接口的业务逻辑（比如新增用户要连数据库、查订单要过滤数据），全写在 service 里
   // 核心目的：逻辑和定义分离：
   // 这样拆分的好处和前端 “抽离工具函数” 完全一样：
+
   // 易维护：改接口路径只动 controller，改业务逻辑只动 service，不用到处找代码；
   // 易复用：多个接口需要同一个逻辑（比如 “校验手机号”），直接调用同一个 service 方法就行，不用重复写；
   // 易测试：单独测 service 里的逻辑，不用管前端请求，就像前端单独测 utils 函数一样。
+
+  //
+  //
+  // 执行顺序（辅助理解）：前端请求 → 中间件 → 守卫 → 管道 → 控制器 → 提供者 → 拦截器（处理响应）→ 异常过滤器（捕获错误）→ 返回前端。
+  // 守卫（权限）+   管道（数据校验） + 异常过滤器（错误处理）
+  // 中间件 请求到达控制器之前、响应返回前端之前，做 “通用预处理 / 后处理”，比如打印日志、跨域处理、请求头修改。
 })
 export class AppModule {}
