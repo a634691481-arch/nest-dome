@@ -9,6 +9,7 @@ import { Index } from './entities/index.entity'
     TypeOrmModule.forFeature([Index]) // 注册实体，这样才能用 Repository
   ],
   controllers: [IndexController],
-  providers: [IndexService]
+  providers: [IndexService],
+  exports: [IndexService] // 导出 IndexService，让其他模块可以使用
 })
 export class IndexModule {}

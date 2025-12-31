@@ -6,6 +6,7 @@ import OSS from 'ali-oss'
 import * as path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { Upload } from './entities/upload.entity'
+import { IndexService } from '../index/index.service' // 导入 IndexService
 
 @Injectable()
 export class UploadService {
@@ -14,7 +15,8 @@ export class UploadService {
   constructor(
     private readonly configService: ConfigService,
     @InjectRepository(Upload)
-    private readonly uploadRepository: Repository<Upload>
+    private readonly uploadRepository: Repository<Upload>,
+    private readonly indexService: IndexService // 注入 IndexService
   ) {
     // 初始化 OSS 客户端
     this.ossClient = new OSS({
@@ -82,6 +84,8 @@ export class UploadService {
       })
 
       const savedRecord = await this.uploadRepository.save(uploadRecord)
+      // 我想在这儿调用  IndexService 里面的  create接口
+      await this.indexService.create({ title: fileName, content: fileUrl })
 
       return {
         id: savedRecord.id,
