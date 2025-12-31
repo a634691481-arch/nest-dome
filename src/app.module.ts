@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import configuration from './config/configuration'
-import { UserModule } from './modules/user/user.module'
-import { OrderModule } from './modules/order/order.module'
 import { DatabaseModule } from './infrastructure/database/database.module'
+import { IndexModule } from './modules/index/index.module'
 
 @Module({
   imports: [
-    // 配置模块，全局可用
+    // 导入配置变量，让其他模块能使用 全局可用
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration]
@@ -16,9 +15,12 @@ import { DatabaseModule } from './infrastructure/database/database.module'
     // 基础设施层
     DatabaseModule,
     // 业务模块
-    UserModule,
-    OrderModule
-  ]
+
+    IndexModule
+  ],
+  providers: [], // 引入的都是injectable的
+  controllers: [], //
+  exports: []
 })
 export class AppModule {}
 //
@@ -92,4 +94,20 @@ export class AppModule {}
 //
 //
 // private readonly userService: UserService // 类类型约束
-//内部访问  只读  构造函数  构造函数的约定
+// 内部访问  只读  构造函数  构造函数的约定
+//
+//
+//
+//
+//
+//
+//
+//   @Controller()  告诉这是一个接口控制器
+//   @Get()  告诉这个方法处理get 请求
+//   @Post()  告诉这个方法处理post 请求
+//   @Put()  告诉这个方法处理put 请求
+//   @Delete()  告诉这个方法处理delete 请求
+//   @Patch()  告诉这个方法处理patch 请求
+//
+//  @Controller() 和 @Injectable   是一一对应de
+//  @Injectable() 是提供者 可以在模块(module)中注入 和  控制器 (controller)注入
