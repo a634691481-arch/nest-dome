@@ -13,6 +13,7 @@ export class ApiResponse<T = any> {
     this.statusCode = statusCode
     this.message = message
     this.data = data
+
     this.timestamp = new Date().toISOString()
   }
 

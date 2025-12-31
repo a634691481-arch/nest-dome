@@ -35,7 +35,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api')
 
   // 读取配置信息
-  const port = process.env.PORT || 3000
+  //process.env.PORT ||
+  const port = 3333
   await app.listen(port)
 }
 

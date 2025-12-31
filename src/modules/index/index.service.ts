@@ -13,6 +13,11 @@ export class IndexService {
     private readonly indexRepository: Repository<Index>
   ) {}
 
+  // private readonly indexRepository: Repository<Index>
+  // constructor(indexRepository: Repository<Index>) {
+  //   this.indexRepository = indexRepository
+  // }
+
   // 创建一条数据（插入数据库）
   async create(createIndexDto: CreateIndexDto) {
     // create + save 方式（推荐，会触发所有钩子）
