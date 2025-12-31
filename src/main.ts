@@ -1,24 +1,41 @@
 import { NestFactory } from '@nestjs/core'
+import type { INestApplication } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule) // 创建NestJS应用实例
-
+function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('API Documentation') // 设置API文档的标题
-    .setDescription('API接口文档') // 设置API文档的描述信息
-    .setVersion('1.0') // 设置API的版本号
-    .addBearerAuth() // 添加Bearer Token认证方式，用于API安全验证
-    .build() // 构建Swagger配置对象
-  const documentFactory = () => SwaggerModule.createDocument(app, config) // 创建Swagger文档
-  SwaggerModule.setup('swagger', app, documentFactory) // 设置Swagger，访问路径为 /api-docs
+    .setTitle('API Documentation')
+    .setDescription('API接口文档')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build()
 
-  app.setGlobalPrefix('api') // 设置全局路由前缀
-  await app.listen(process.env.PORT ?? 3000) // 监听端口
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('swagger', app, document) // 设置Swagger，访问路径为 /swagger
 }
 
-bootstrap().catch(err => {
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule)
+
+  // 配置跨域
+  app.enableCors({
+    origin: true,
+    credentials: true
+  })
+
+  // 配置 Swagger
+  setupSwagger(app)
+
+  // 设置全局路由前缀
+  app.setGlobalPrefix('api')
+
+  // 读取配置信息
+  const port = process.env.PORT || 3000
+  await app.listen(port)
+}
+
+bootstrap().catch((err: unknown) => {
   console.error('Bootstrap error:', err)
   process.exit(1)
 })
