@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import type { INestApplication } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 
 function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
@@ -23,6 +24,9 @@ async function bootstrap() {
     origin: true,
     credentials: true
   })
+
+  // 全局注册响应拦截器
+  app.useGlobalInterceptors(new TransformInterceptor())
 
   // 配置 Swagger
   setupSwagger(app)

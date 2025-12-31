@@ -4,13 +4,13 @@ import { ResponseCode } from '../constants/response-code.enum'
  * 统一响应格式
  */
 export class ApiResponse<T = any> {
-  code: number
+  statusCode: number
   message: string
   data?: T
   timestamp: string
 
-  constructor(code: number, message: string, data?: T) {
-    this.code = code
+  constructor(statusCode: number, message: string, data?: T) {
+    this.statusCode = statusCode
     this.message = message
     this.data = data
     this.timestamp = new Date().toISOString()
@@ -20,7 +20,7 @@ export class ApiResponse<T = any> {
     return new ApiResponse(ResponseCode.SUCCESS, message, data)
   }
 
-  static error(code: number, message: string): ApiResponse {
-    return new ApiResponse(code, message)
+  static error(statusCode: number, message: string): ApiResponse {
+    return new ApiResponse(statusCode, message)
   }
 }
