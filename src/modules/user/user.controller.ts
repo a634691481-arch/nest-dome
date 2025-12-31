@@ -1,43 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common'
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { ConfigService } from '@nestjs/config'
 
+@ApiTags('用户管理')
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly configService: ConfigService, //类类型约束
-    private readonly userService: UserService // 类类型约束
-    //内部访问  只读  构造函数  构造函数的约定
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Post()
+  @ApiOperation({ summary: '创建用户' })
+  @ApiResponse({ status: 201, description: '创建成功' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
 
   @Get()
+  @ApiOperation({ summary: '获取所有用户' })
   findAll() {
-    // return this.userService.findAll()
-    const res = this.configService.get('DB_HOST') as string
-    return {
-      res
-    }
+    return this.userService.findAll()
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id)
+  @ApiOperation({ summary: '获取指定用户' })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findOne(id)
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto)
+  @ApiOperation({ summary: '更新用户' })
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id)
+  @ApiOperation({ summary: '删除用户' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    this.userService.remove(id)
+    return { message: '删除成功' }
   }
 }
