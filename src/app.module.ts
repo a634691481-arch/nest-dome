@@ -1,28 +1,24 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import configuration from './config/configuration'
 import { UserModule } from './modules/user/user.module'
 import { OrderModule } from './modules/order/order.module'
+import { DatabaseModule } from './infrastructure/database/database.module'
 
-// 装饰器可以理解为一个封装好的函数，  其实就是一个语法糖
 @Module({
-  controllers: [],
-  providers: [],
   imports: [
+    // 配置模块，全局可用
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      load: [configuration]
+      // validationSchema: validationSchema, // 可选：启用环境变量验证
     }),
-
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: ':memory:',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
-    }),
+    // 基础设施层
+    DatabaseModule,
+    // 业务模块
     UserModule,
     OrderModule
-  ],
-  exports: []
+  ]
 })
 export class AppModule {}
 //

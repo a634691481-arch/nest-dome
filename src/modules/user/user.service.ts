@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
 import { BaseService } from '../../shared/base.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -6,57 +8,43 @@ import { User } from './entities/user.entity'
 
 @Injectable()
 export class UserService extends BaseService {
-  private users: User[] = []
-  private idCounter = 1
-
-  constructor() {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
+  ) {
     super(UserService.name)
-    // 初始化一些测试数据
-    this.users.push({
-      id: this.idCounter++,
-      name: '张三',
-      email: 'zhangsan@example.com',
-      age: 25,
-      createdAt: new Date()
-    })
   }
 
-  create(createUserDto: CreateUserDto): User {
-    const user: User = {
-      id: this.idCounter++,
-      ...createUserDto,
-      createdAt: new Date()
-    }
-    this.users.push(user)
-    this.logInfo(`用户创建成功: ${user.name}`)
-    return user
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = this.userRepository.create(createUserDto)
+    const savedUser = await this.userRepository.save(user)
+    this.logInfo(`用户创建成功: ${savedUser.name}`)
+    return savedUser
   }
 
-  findAll(): User[] {
-    return this.users
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find()
   }
 
-  findOne(id: number): User {
-    const user = this.users.find(u => u.id === id)
+  async findOne(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } })
     if (!user) {
       throw new NotFoundException(`用户 ID ${id} 不存在`)
     }
     return user
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): User {
-    const user = this.findOne(id)
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findOne(id)
     Object.assign(user, updateUserDto)
-    this.logInfo(`用户更新成功: ${user.name}`)
-    return user
+    const updatedUser = await this.userRepository.save(user)
+    this.logInfo(`用户更新成功: ${updatedUser.name}`)
+    return updatedUser
   }
 
-  remove(id: number): void {
-    const index = this.users.findIndex(u => u.id === id)
-    if (index === -1) {
-      throw new NotFoundException(`用户 ID ${id} 不存在`)
-    }
-    this.users.splice(index, 1)
+  async remove(id: number): Promise<void> {
+    const user = await this.findOne(id)
+    await this.userRepository.remove(user)
     this.logInfo(`用户删除成功: ID ${id}`)
   }
 }
