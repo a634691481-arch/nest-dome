@@ -7,8 +7,9 @@ import { ConfigService } from '@nestjs/config'
 @Controller('user')
 export class UserController {
   constructor(
-    private readonly configService: ConfigService,
-    private readonly userService: UserService
+    private readonly configService: ConfigService, //类类型约束
+    private readonly userService: UserService // 类类型约束
+    //内部访问  只读  构造函数  构造函数的约定
   ) {}
 
   @Post()
