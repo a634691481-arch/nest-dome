@@ -4,17 +4,17 @@ import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 
-function setupSwagger(app: INestApplication) {
-  const config = new DocumentBuilder()
-    .setTitle('API Documentation')
-    .setDescription('API接口文档')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build()
+// function setupSwagger(app: INestApplication) {
+//   const config = new DocumentBuilder()
+//     .setTitle('API Documentation')
+//     .setDescription('API接口文档')
+//     .setVersion('1.0')
+//     .addBearerAuth()
+//     .build()
 
-  const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('swagger', app, document) // 设置Swagger，访问路径为 /swagger
-}
+//   const document = SwaggerModule.createDocument(app, config)
+//   SwaggerModule.setup('swagger', app, document) // 设置Swagger，访问路径为 /swagger
+// }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -29,7 +29,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor())
 
   // 配置 Swagger
-  setupSwagger(app)
+  // setupSwagger(app)
 
   // 设置全局路由前缀
   app.setGlobalPrefix('api')

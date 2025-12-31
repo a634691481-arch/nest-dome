@@ -2,10 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { IndexService } from './index.service'
 import { CreateIndexDto } from './dto/create-index.dto'
 import { UpdateIndexDto } from './dto/update-index.dto'
-import { ApiTags } from '@nestjs/swagger'
 
 @Controller('index')
-@ApiTags('图片')
 export class IndexController {
   constructor(private readonly indexService: IndexService) {}
 
